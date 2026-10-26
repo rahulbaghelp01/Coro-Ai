@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+
+/* Modern Standard (Firefox/Safari baseline) */
+:root {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(155, 155, 155, 0.5) transparent;
+}
+
+/* Chrome, Edge, and WebKit Engines */
+::-webkit-scrollbar {
+  width: 8px; /* Slimmer footprint */
+  height: 8px; /* For horizontal bars */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Seamless blend into the body background */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(155, 155, 155, 0.4);
+  border-radius: 20px; /* Fully rounded capsule */
+  border: 2px solid transparent; /* Creates padding effect if background is used */
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(155, 155, 155, 0.7); /* Deepens on user engagement */
+}
