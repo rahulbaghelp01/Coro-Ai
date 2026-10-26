@@ -1,10 +1,17 @@
 import 'dotenv/config'
 
-export const env = {
-  port: Number(process.env.PORT) || 3000,
-  mongoUri: process.env.MONGO_URI as string,
+const requiredEnv = (name: string) => {
+  const value = process.env[name]
+
+  if (!value) {
+    throw new Error(`${name} is missing in .env`)
+  }
+
+  return value
 }
 
-if (!env.mongoUri) {
-  throw new Error('MONGO_URI is missing in .env')
+export const env = {
+  port: Number(process.env.PORT) || 3000,
+  mongoUri: requiredEnv('MONGO_URI'),
+  jwtSecret: requiredEnv('JWT_SECRET'),
 }
