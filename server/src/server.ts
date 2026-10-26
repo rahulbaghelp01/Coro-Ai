@@ -1,14 +1,17 @@
-import express from "express";
-import type { Request, Response } from "express";
+import express from 'express'
+import { env } from './config/env'
+import { connectDB } from './config/db'
 
-const app = express();
+const app = express()
+app.use(express.json())
 
-const PORT = process.env.PORT || 3000;
+app.get('/', (_req, res) => {
+  res.send('Server is running perfectly!')
+})
 
-app.get("/", (_req: Request, res: Response) => {
-  res.send('Server is running perfectly!');
-});
+async function start() {
+  await connectDB()
+  app.listen(env.port, () => console.log(`Server on port ${env.port}`))
+}
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+start()
