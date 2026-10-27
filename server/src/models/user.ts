@@ -17,3 +17,7 @@ const userSchema = new mongoose.Schema(
 
 export type UserDoc = InferSchemaType<typeof userSchema>
 export const User = mongoose.model('User', userSchema)
+
+
+
+/*here we are simply creating the user schema and then we are conencting the user model to the db using the mongoose connection*/

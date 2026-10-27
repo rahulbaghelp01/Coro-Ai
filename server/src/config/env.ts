@@ -15,3 +15,7 @@ export const env = {
   mongoUri: requiredEnv('MONGO_URI'),
   jwtSecret: requiredEnv('JWT_SECRET'),
 }
+
+
+//here we store all the env variables so we dont need to import dotenv every where 
+//it also provides us a required function which checks if the env is available or not 

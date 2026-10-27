@@ -5,3 +5,11 @@ export const signupSchema = z.object({
   email: z.string().trim().toLowerCase().email('Enter a valid email'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
 })
+
+export const loginSchema = z.object({
+  email: z.string().trim().toLowerCase().email('Enter a valid email'),
+  password: z.string().min(1, 'Password is required'),
+})
+
+//this is the zod error validation which we have used inside the
+//inside the controllers 

@@ -20,3 +20,18 @@ export async function signup(name: string, email: string, password: string) {
     token: signToken(user.id),
   }
 }
+
+export async function login(email: string, password: string) {
+  const user = await User.findOne({ email }).select('+passwordHash')
+  const valid = user && (await bcrypt.compare(password, user.passwordHash))
+  if (!user || !valid) throw new AppError('Invalid email or password', 401)
+
+  return {
+    user: { id: user.id, name: user.name, email: user.email },
+    token: signToken(user.id),
+  }
+}
+
+
+
+//this is the service code it basically executes teh core logic  
