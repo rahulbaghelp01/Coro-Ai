@@ -32,6 +32,12 @@ export async function login(email: string, password: string) {
   }
 }
 
+export async function getMe(userId: string) {
+  const user = await User.findById(userId)
+  if (!user) throw new AppError('User not found', 401)
+  return { id: user.id, name: user.name, email: user.email }
+}
+
 
 
 //this is the service code it basically executes teh core logic  

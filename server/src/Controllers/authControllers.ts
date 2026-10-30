@@ -17,6 +17,16 @@ export async function login(req: Request, res: Response) {
   res.json({ user })
 }
 
+export async function me(req: Request, res: Response) {
+  const user = await authService.getMe(req.userId!)
+  res.json({ user })
+}
+
+export function logout(_req: Request, res: Response) {
+  res.clearCookie(AUTH_COOKIE, authCookieOptions)
+  res.json({ message: 'Logged out' })
+}
+
 /*so the first thing we have here is the 
 we check the each thing with the signup schema if its not in this format then its not valid 
 and then the zod error comes our error handler treats that
