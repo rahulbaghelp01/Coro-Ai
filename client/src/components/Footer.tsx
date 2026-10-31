@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { Mail, ArrowUpRight } from 'lucide-react'
-import { ROUTES } from '../app/router'
+import { ROUTES } from '../app/routes'
 
 const product = [
   { label: 'Features', to: ROUTES.features },

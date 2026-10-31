@@ -10,3 +10,4 @@ export const ROUTES = {
   join: (token: string) => `/join/${token}`,
 } as const
 
+//in this file we determine the each route 

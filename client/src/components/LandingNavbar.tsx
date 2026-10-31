@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
 import Logo from './logo'
 import Reveal from './Reveal'
-import { ROUTES } from '../app/router'
+import { ROUTES } from '../app/routes'
 
 const links = [
   { label: 'About', to: ROUTES.about },

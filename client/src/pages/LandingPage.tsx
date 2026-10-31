@@ -1,7 +1,9 @@
 import { Link } from 'react-router'
 import CallPreview from '../components/CallPreview'
 import Reveal from '../components/Reveal'
-import { ROUTES } from '../app/router'
+import { ROUTES } from '../app/routes'
+
+
 
 const steps = [
   {
