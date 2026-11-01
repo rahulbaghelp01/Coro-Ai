@@ -10,4 +10,4 @@ export const ROUTES = {
   join: (token: string) => `/join/${token}`,
 } as const
 
-//in this file we determine the each route 
+//this is nothing just an object so we dont have to right the path every where we could just routes.about do smtg like this for each

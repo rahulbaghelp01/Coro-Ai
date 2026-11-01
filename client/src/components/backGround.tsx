@@ -1,4 +1,4 @@
- 
+ // this file is the backgorund for whole application 
 export default function Background() {
   return (
     <div

@@ -6,6 +6,7 @@ const people = [
   { name: 'Sam', initial: 'S', bg: 'from-[#4a7fe0] to-[#1a3a82]', speaking: false },
 ]
 
+
 export default function CallPreview() {
   return (
     <div
