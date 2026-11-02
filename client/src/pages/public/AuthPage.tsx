@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { useAuth } from '../features/auth/useAuth'
+import { useAuth } from '../../features/auth/useAuth'
 
 type Mode = 'login' | 'signup'
 

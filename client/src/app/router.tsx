@@ -11,18 +11,18 @@ export const router = createBrowserRouter([
       {
         element: <PublicLayout />,
         children: [
-          { index: true, lazy: () => import('../pages/LandingPage') },
-          { path: 'about', lazy: () => import('../pages/AboutPage') },
-          { path: 'features', lazy: () => import('../pages/FeaturePage') },
-          { path: 'learn', lazy: () => import('../pages/LearnPage') },
-          { path: 'auth', lazy: () => import('../pages/AuthPage') },
+          { index: true, lazy: () => import('../pages/public/LandingPage') },
+          { path: 'about', lazy: () => import('../pages/public/AboutPage') },
+          { path: 'features', lazy: () => import('../pages/public/FeaturePage') },
+          { path: 'learn', lazy: () => import('../pages/public/LearnPage') },
+          { path: 'auth', lazy: () => import('../pages/public/AuthPage') },
         ],
       },
     ],
   },
   {
     element: <RequireAuth />,
-    children: [{ path: 'app', lazy: () => import('../pages/HomePage') }],
+    children: [{ path: 'app', lazy: () => import('../pages/app/HomePage') }],
   },
 ])
 //this is where we tell 
