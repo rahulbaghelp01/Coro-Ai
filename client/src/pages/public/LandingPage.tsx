@@ -1,7 +1,7 @@
 import { Link } from 'react-router'
-import CallPreview from '../components/CallPreview'
-import Reveal from '../components/Reveal'
-import { ROUTES } from '../app/routes'
+import CallPreview from '../../components/CallPreview'
+import Reveal from '../../components/Reveal'
+import { ROUTES } from '../../app/routes'
 
 
 

@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import authRoutes from './routes/authRouer'
+import chatRoutes from './routes/ChatRoutes'
 import { errorHandler } from './middleware/errorhandler'
 
 export const app = express();
@@ -15,6 +16,7 @@ app.get('/', (_req, res) => {
 })
 
 app.use('/api/auth', authRoutes)
+app.use('/api/chats', chatRoutes)
 
 app.use(errorHandler) // must stay last // must stay last
 
