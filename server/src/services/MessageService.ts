@@ -1,4 +1,4 @@
-import { Message } from '../models/message'
+import { Message } from '../models/Message'
 import { assertMember } from './chatService'
 
 function toDto(message: InstanceType<typeof Message>) {
