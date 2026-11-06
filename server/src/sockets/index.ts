@@ -1,18 +1,20 @@
 import type { Server as HttpServer } from 'http'
 import { Server } from 'socket.io'
-import * as cookie from 'cookie' // Keeps the namespace import
+import * as cookie from 'cookie' // Changed to namespace import
 import jwt from 'jsonwebtoken'
 import { env } from '../config/env'
 import { AUTH_COOKIE } from '../utils/authCookie'
+import { registerChatHandlers } from './chatHandlers'
 
 export function initSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: { origin: 'http://localhost:5173', credentials: true },
   })
 
+  // Runs once per connection, before it is accepted
   io.use((socket, next) => {
     try {
-      // ✅ CHANGED: cookie.parse -> cookie.parseCookie
+      // ✅ Updated to use parseCookie from the new module layout
       const cookies = cookie.parseCookie(socket.handshake.headers.cookie ?? '')
       const token = cookies[AUTH_COOKIE]
       if (!token) return next(new Error('Not logged in'))
@@ -27,6 +29,7 @@ export function initSocket(httpServer: HttpServer) {
 
   io.on('connection', (socket) => {
     console.log('socket connected:', socket.data.userId)
+    registerChatHandlers(socket)
   })
 
   return io
