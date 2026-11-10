@@ -10,6 +10,7 @@ type Ack = (response: { ok: boolean; error?: string }) => void
 function toErrorMessage(err: unknown) {
   if (err instanceof ZodError) return err.issues[0].message
   if (err instanceof AppError) return err.message
+    console.error(err)
   return 'Something went wrong'
 }
 

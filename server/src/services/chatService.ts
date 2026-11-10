@@ -1,6 +1,7 @@
 import { isValidObjectId } from 'mongoose'
 import { Chat } from '../models/chat'
 import { AppError } from '../utils/AppError'
+import { User } from '../models/user'
 
 export async function createChat(name: string, userId: string) {
   const chat = await Chat.create({
@@ -47,5 +48,22 @@ export async function assertMember(chatId: string, userId: string) {
   if (!chat) throw new AppError('Chat not found', 404)
 
   return chat
+}
+
+
+export async function listMembers(chatId: string, userId: string) {
+  const chat = await assertMember(chatId, userId)
+  const hostId = chat.host.toString()
+
+  const users = await User.find({ _id: { $in: chat.members } }).select('name')
+
+  return {
+    hostId,
+    members: users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      isHost: user.id === hostId,
+    })),
+  }
 }
 
