@@ -5,13 +5,14 @@ import jwt from 'jsonwebtoken' // jwt
 import { env } from '../config/env' // env for secret key 
 import { AUTH_COOKIE } from '../utils/authCookie' // the auth cookie variable which holds the name of the cookie  
 import { registerChatHandlers } from './chatHandlers' // registered caht handler function 
+import { setIo } from './io'
 
 export function initSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
     cors: { origin: 'http://localhost:5173', credentials: true },
   }) //creating a function which will create an socket server which runs on the same port for socket 
   // allowsing cors too and cookies too  attaches Socket.IO to your existing HTTP server.
-
+  setIo(io)
   // Runs once per connection, before it is accepted
   io.use((socket, next) => { // middleware 
     try {
@@ -27,11 +28,15 @@ export function initSocket(httpServer: HttpServer) {
       next(new Error('Invalid session'))
     }
   })
+io.on('connection', (socket) => {
+  console.log('socket connected:', socket.data.userId)
 
-  io.on('connection', (socket) => { 
-    console.log('socket connected:', socket.data.userId)
-    registerChatHandlers(io, socket)
-  }) 
+  socket.join(`user:${socket.data.userId}`) // ADD THIS
+
+  registerChatHandlers(io, socket)
+})
 
   return io
 }
+
+

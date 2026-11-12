@@ -67,3 +67,22 @@ export async function listMembers(chatId: string, userId: string) {
   }
 }
 
+
+export async function removeMember(chatId: string, hostId: string, targetId: string) {
+  const chat = await assertMember(chatId, hostId)
+
+  if (chat.host.toString() !== hostId) {
+    throw new AppError('Only the host can remove members', 403)
+  }
+  if (targetId === hostId) {
+    throw new AppError('The host cannot be removed', 400)
+  }
+  if (!isValidObjectId(targetId)) {
+    throw new AppError('Member not found', 404)
+  }
+
+  const result = await Chat.updateOne({ _id: chatId }, { $pull: { members: targetId } })
+  if (result.modifiedCount === 0) throw new AppError('Member not found', 404)
+
+  return { chatName: chat.name }
+}
