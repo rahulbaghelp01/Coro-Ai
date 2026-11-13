@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
       element: <AppLayout />,
       children: [
         { index: true, lazy: () => import('../pages/app/HomePage') },
-        { path: 'chat/:chatId', lazy: () => import('../pages/app/ChatCallPage') },
+        
       ],
     },
   ],
