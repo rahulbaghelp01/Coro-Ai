@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router'
 import { GuestOnly, RequireAuth } from './guards'
 import PublicLayout from '../layouts/PublicLayout'
+import AppLayout from '../layouts/AppLayout'
 
 //here we register all our routes if url matches any of these routes it will take them to this page 
 
@@ -21,8 +22,17 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <RequireAuth />,
-    children: [{ path: 'app', lazy: () => import('../pages/app/HomePage') }],
-  },
+  element: <RequireAuth />,
+  children: [
+    {
+      path: 'app',
+      element: <AppLayout />,
+      children: [
+        { index: true, lazy: () => import('../pages/app/HomePage') },
+        { path: 'chat/:chatId', lazy: () => import('../pages/app/ChatCallPage') },
+      ],
+    },
+  ],
+},
 ])
 //this is where we tell 

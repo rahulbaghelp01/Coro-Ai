@@ -31,8 +31,7 @@ export function initSocket(httpServer: HttpServer) {
 io.on('connection', (socket) => {
   console.log('socket connected:', socket.data.userId)
 
-  socket.join(`user:${socket.data.userId}`) // ADD THIS
-
+  socket.join(`user:${socket.data.userId}`)  
   registerChatHandlers(io, socket)
 })
 
