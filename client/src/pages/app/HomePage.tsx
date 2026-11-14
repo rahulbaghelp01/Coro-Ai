@@ -1,5 +1,5 @@
-import Sidebar from '../../components/ChatSidebar'
+import ChatWorkspace from '../../components/ChatWorkplace'
 
-export function Component() {
-  return <Sidebar />
+export default function HomePage() {
+  return <ChatWorkspace chatId={null} />
 }
