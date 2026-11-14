@@ -16,7 +16,7 @@ interface AppState {
 export const useAppStore = create<AppState>((set) => ({
   // Initial states
   isChatPanelOpen: true,
-  isSidebarOpen: true,
+  isSidebarOpen: false,
   isVoicePanelOpen: false,
   isMemberListOpen: false,
 

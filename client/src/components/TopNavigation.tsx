@@ -1,18 +1,18 @@
-import { Users , ToggleLeft } from "lucide-react"
+import { Users, ToggleLeft } from "lucide-react"
 import { useAppStore } from "../store/appStore"
 
-export  default function TopNavigation(){
+export default function TopNavigation() {
+    const toggleChatPanel = useAppStore((state) => state.toggleChatPanel)
+    const toggleMemberList = useAppStore((state) => state.toggleMemberList)
 
-    const isChatPanelOpen = useAppStore((state) => state.isChatPanelOpen)
-
-
-    return(
+    return (
         <div>
-            <button>
-                <ToggleLeft/>
+            <button onClick={toggleChatPanel}>
+                <ToggleLeft />
             </button>
-            <button>
-                <Users/>
+
+            <button onClick={toggleMemberList}>
+                <Users />
             </button>
         </div>
     )
