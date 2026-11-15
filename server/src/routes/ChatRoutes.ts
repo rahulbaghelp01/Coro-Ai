@@ -18,5 +18,7 @@ router.delete('/:chatId/members/:userId', requireAuth, removeMember)
 router.get('/:chatId/messages', requireAuth, listMessages)
 router.post('/:chatId/messages', requireAuth, sendMessage)
 
+// api/chats/:chatId/messages
+
 
 export default router
