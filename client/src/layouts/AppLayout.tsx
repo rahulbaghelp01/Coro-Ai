@@ -1,7 +1,7 @@
 
 import { Outlet } from 'react-router'
 
-import TopNavigation from '../components/HomePageNavbar'
+import TopNavigation from '../components/TopNavigation'
 import BottomNavigation from '../components/BottomNavigation'
 import Sidebar from '../components/ChatSidebar'
 

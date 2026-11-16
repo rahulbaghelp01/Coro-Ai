@@ -20,7 +20,12 @@ interface ChatsResponse {
   chats: Chat[]
 }
 
-export default function Sidebar() {
+type ChatPanelProps = {
+  chatId: string;
+};
+
+
+export default function ChatPanel({ chatId }: ChatPanelProps) {
   const [searchQuery, setSearchQuery] = useState('')
   const [chats, setChats] = useState<Chat[]>([])
   const [loading, setLoading] = useState(true)
