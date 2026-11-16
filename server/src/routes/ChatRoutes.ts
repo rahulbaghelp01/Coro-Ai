@@ -10,7 +10,7 @@ const router = Router()
 //chat
 router.post('/', requireAuth, createChat)
 router.post('/join/:token', requireAuth, joinChat)
-router.get('/', requireAuth, listMyChats)
+router.get('/', requireAuth, listMyChats)//done
 router.get('/:chatId/members', requireAuth, listMembers)
 router.delete('/:chatId/members/:userId', requireAuth, removeMember)
 

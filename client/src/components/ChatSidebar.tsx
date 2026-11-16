@@ -19,13 +19,10 @@ interface Chat {
 interface ChatsResponse {
   chats: Chat[]
 }
-
-type ChatPanelProps = {
-  chatId: string;
-};
+ 
 
 
-export default function ChatPanel({ chatId }: ChatPanelProps) {
+export default function ChatPanel() {
   const [searchQuery, setSearchQuery] = useState('')
   const [chats, setChats] = useState<Chat[]>([])
   const [loading, setLoading] = useState(true)
@@ -93,7 +90,7 @@ export default function ChatPanel({ chatId }: ChatPanelProps) {
         </button>
       </div>
 
-      {/* Search */}
+     
       {isSidebarOpen && (
         <div className="px-4 pb-4">
           <div className="flex items-center gap-2 rounded-xl
@@ -114,7 +111,7 @@ export default function ChatPanel({ chatId }: ChatPanelProps) {
         </div>
       )}
 
-      {/* Chat history */}
+    
       {isSidebarOpen && (
         <div className="flex-1 overflow-y-auto px-3 pb-4">
 
@@ -135,7 +132,7 @@ export default function ChatPanel({ chatId }: ChatPanelProps) {
               </p>
             )}
 
-            {/* Chat list */}
+             
             {!loading && !error && filteredChats.map((chat) => (
               <Link
                 key={chat.id}
