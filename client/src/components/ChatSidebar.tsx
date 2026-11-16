@@ -1,24 +1,30 @@
- 
-import { useState } from 'react'
+
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { Search, PanelRight } from 'lucide-react'
 
 import Logo from './logo'
 import Background from './backGround'
-import { useAppStore } from '../store/appStore'
+import ChatListSkeleton from './ChatListSkeleton'
 
-// Temporary mock data matching your backend response
-const mockChats = [
-  { id: 'chat-001', name: 'Project Coro AI', isHost: true },
-  { id: 'chat-002', name: 'Development Team', isHost: false },
-  { id: 'chat-003', name: 'Random Discussions', isHost: true },
-  { id: 'chat-004', name: 'Learning Node.js', isHost: false },
-  { id: 'chat-005', name: 'System Design', isHost: true },
-  { id: 'chat-006', name: 'Friends Group', isHost: false },
-]
+import { useAppStore } from '../store/appStore'
+import { api } from '../lib/api'
+
+interface Chat {
+  id: string
+  name: string
+  isHost: boolean
+}
+
+interface ChatsResponse {
+  chats: Chat[]
+}
 
 export default function Sidebar() {
   const [searchQuery, setSearchQuery] = useState('')
+  const [chats, setChats] = useState<Chat[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   const isSidebarOpen = useAppStore(
     (state) => state.isSidebarOpen
@@ -28,7 +34,32 @@ export default function Sidebar() {
     (state) => state.toggleSidebar
   )
 
-  const filteredChats = mockChats.filter((chat) =>
+  // Fetch chats from backend
+  useEffect(() => {
+    async function fetchChats() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const data = await api<ChatsResponse>('/chats')
+
+        setChats(data.chats)
+      } catch (error) {
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to fetch chats'
+        )
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchChats()
+  }, [])
+
+  // Filter chats based on search
+  const filteredChats = chats.filter((chat) =>
     chat.name.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
@@ -89,7 +120,18 @@ export default function Sidebar() {
 
           <div className="flex flex-col gap-1">
 
-            {filteredChats.map((chat) => (
+            {/* Loading */}
+            {loading && <ChatListSkeleton />}
+
+            {/* Error */}
+            {!loading && error && (
+              <p className="px-3 py-6 text-center text-sm text-red-500">
+                {error}
+              </p>
+            )}
+
+            {/* Chat list */}
+            {!loading && !error && filteredChats.map((chat) => (
               <Link
                 key={chat.id}
                 to={`/app/chat/${chat.id}`}
@@ -106,7 +148,8 @@ export default function Sidebar() {
               </Link>
             ))}
 
-            {filteredChats.length === 0 && (
+            {/* Empty state */}
+            {!loading && !error && filteredChats.length === 0 && (
               <p className="px-3 py-6 text-center text-sm
               font-medium text-black/50">
                 No chats found
