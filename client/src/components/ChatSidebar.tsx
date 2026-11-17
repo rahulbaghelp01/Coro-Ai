@@ -9,18 +9,11 @@ import ChatListSkeleton from './ChatListSkeleton'
 
 import { useAppStore } from '../store/appStore'
 import { api } from '../lib/api'
-
-interface Chat {
-  id: string
-  name: string
-  isHost: boolean
-}
+import type { Chat } from '../features/types/types'
 
 interface ChatsResponse {
   chats: Chat[]
 }
- 
-
 
 export default function ChatPanel() {
   const [searchQuery, setSearchQuery] = useState('')

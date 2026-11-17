@@ -10,11 +10,12 @@ export async function createChat(name: string, userId: string) {
     members: [userId],
   })
 
-  return {
+   return {
     id: chat.id,
     name: chat.name,
     inviteToken: chat.inviteToken,
-  }
+    isHost: true,
+    } 
 }
 
 
@@ -33,10 +34,11 @@ export async function joinChat(inviteToken: string, userId: string) {
 export async function listMyChats(userId: string) {
   const chats = await Chat.find({ members: userId }).sort({ updatedAt: -1 })
 
-  return chats.map((chat) => ({
-    id: chat.id,
-    name: chat.name,
-    isHost: chat.host.toString() === userId,
+   return chats.map((chat) => ({
+  id: chat.id,
+  name: chat.name,
+  isHost: chat.host.toString() === userId,
+  inviteToken: chat.inviteToken,
   }))
 }
 

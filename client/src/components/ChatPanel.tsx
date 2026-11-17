@@ -1,6 +1,6 @@
-
+import { useLocation, useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
- 
+import type { Chat} from '../features/types/types' 
 import { api } from '../lib/api'
 
 interface Message {
@@ -14,14 +14,30 @@ interface Message {
 
 interface ChatPanelProps {
   chatId: string
+  addChat: (chat: Chat) => void
 }
+ 
 
-export default function ChatPanel({ chatId }: ChatPanelProps) {
+export default function ChatPanel({ chatId,addChat }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [name, setName] = useState('')
+  const location = useLocation()
+  const isHomePage = location.pathname === '/app'
+  const isChatPage = location.pathname.startsWith('/app/chat/')
 
+  const navigate = useNavigate()
   
+ async function createChat(name: string) {
+  const data = await api<{ chat: Chat }>('/chats', {
+    method: 'POST',
+    body: { name },
+  })
+
+  addChat(data.chat)
+    navigate(`/app/chat/${data.chat.id}`)
+  } 
 
   // Fetch chat messages
   useEffect(() => {
@@ -71,14 +87,23 @@ export default function ChatPanel({ chatId }: ChatPanelProps) {
 
   return (
     <main className="flex h-full flex-col">
-      {messages.length === 0 ? (
-        <p>No messages yet. Start the conversation!</p>
-      ) : (
-        messages.map((message) => (
-          <div key={message.id}>
-            <p>{message.text}</p>
-          </div>
-        ))
+      {isHomePage && (
+    <form
+      onSubmit={async (e) => {
+      e.preventDefault()
+      await createChat(name)
+    }}
+    >
+      <input
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Chat name"
+      />
+      <button type="submit">Create Chat</button>
+      </form>
+      )}
+      {isChatPage && (
+        <div></div>
       )}
     </main>
   )
