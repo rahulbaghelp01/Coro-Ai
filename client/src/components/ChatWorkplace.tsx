@@ -2,12 +2,10 @@
 import ChatPanel from './ChatPanel'
 import VideoPanel from './VideoCallPanel'
 import { useAppStore } from '../store/appStore'
+import type { ChatPanelProps } from '../features/types/types'
+ 
 
-interface ChatWorkProps {
-  chatId: string
-}
-
-export default function ChatWork({ chatId }: ChatWorkProps) {
+export default function ChatWork({ chatId, addChat }: ChatPanelProps) {
   const isChatPanelOpen = useAppStore(
     (state) => state.isChatPanelOpen
   )
@@ -25,7 +23,7 @@ export default function ChatWork({ chatId }: ChatWorkProps) {
         {/* Chat Panel */}
         {isChatPanelOpen && (
           <section className="min-h-0 min-w-0 flex-1 overflow-hidden rounded-2xl">
-            <ChatPanel chatId={chatId} />
+            <ChatPanel chatId={chatId} addChat={addChat} />
           </section>
         )}
 

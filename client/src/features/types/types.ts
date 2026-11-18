@@ -5,4 +5,7 @@ export type Chat = {
   inviteToken: string
 }
 
- 
+export interface ChatPanelProps {
+  chatId: string
+  addChat?: (chat: Chat) => void
+}

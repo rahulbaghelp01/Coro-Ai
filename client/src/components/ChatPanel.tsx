@@ -1,9 +1,11 @@
 
 import { useLocation, useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
-import type { Chat } from '../features/types/types'
+import type { Chat,ChatPanelProps } from '../features/types/types'
 import { api } from '../lib/api'
 import PageLoader from './PageLoader'
+import { useUserId } from '../hooks/useUserId'
+ 
 
 interface Message {
   id: string
@@ -14,16 +16,11 @@ interface Message {
   createdAt: string
 }
 
-interface ChatPanelProps {
-  chatId: string
-  addChat: (chat: Chat) => void
-  userId: string
-}
+
 
 export default function ChatPanel({
   chatId,
   addChat,
-  userId,
 }: ChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(false)
@@ -39,6 +36,8 @@ export default function ChatPanel({
   const isHomePage = location.pathname === '/app'
   const isChatPage = location.pathname.startsWith('/app/chat/')
 
+  const userId = useUserId()
+
   // Create chat
   async function createChat(name: string) {
     try {
@@ -50,7 +49,7 @@ export default function ChatPanel({
         body: { name },
       })
 
-      addChat(data.chat)
+      addChat?.(data.chat)
       setName('')
       navigate(`/app/chat/${data.chat.id}`)
     } catch (err) {
