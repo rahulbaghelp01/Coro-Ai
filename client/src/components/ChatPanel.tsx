@@ -1,11 +1,10 @@
 
 import { useLocation, useNavigate } from 'react-router'
 import { useEffect, useState } from 'react'
-import type { Chat,ChatPanelProps } from '../features/types/types'
+import type { Chat, ChatPanelProps } from '../features/types/types'
 import { api } from '../lib/api'
 import PageLoader from './PageLoader'
 import { useUserId } from '../hooks/useUserId'
- 
 
 interface Message {
   id: string
@@ -15,8 +14,6 @@ interface Message {
   text: string
   createdAt: string
 }
-
-
 
 export default function ChatPanel({
   chatId,
@@ -138,31 +135,30 @@ export default function ChatPanel({
   }
 
   return (
-    <main className="flex h-full flex-col">
+    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
 
       {/* Home page */}
       {isHomePage && (
-        <div className="flex h-full flex-col items-center justify-center px-5 py-10 text-center">
-          <div className="mb-5 flex size-14 items-center justify-center rounded-2xl border border-indigo-300/20 bg-indigo-400/10 text-indigo-200">
-            <span className="text-2xl" aria-hidden="true">+</span>
-          </div>
-          <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+        <div className="flex h-full flex-col items-center justify-center overflow-y-auto px-3 py-5 text-center sm:px-5 sm:py-8">
+
+          <h2 className="text-lg font-semibold text-white sm:text-xl">
             Start a new chat
           </h2>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-white/50">
+
+          <p className="mt-2 max-w-sm text-xs leading-5 text-white/50 sm:text-sm sm:leading-6">
             Give your conversation a name. You can invite people once it’s
             created.
           </p>
 
           <form
-            className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row"
+            className="mt-5 flex w-full max-w-md flex-col gap-2 sm:mt-6 sm:flex-row sm:gap-3"
             onSubmit={async (e) => {
               e.preventDefault()
               await createChat(name)
             }}
           >
             <input
-              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-indigo-300/50 focus:ring-2 focus:ring-indigo-400/15"
+              className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-xs text-white outline-none placeholder:text-white/35 focus:border-indigo-300/50 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Weekend plans"
@@ -170,15 +166,16 @@ export default function ChatPanel({
             />
 
             <button
-              className="rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-45"
+              className="shrink-0 rounded-lg bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-45 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
               type="submit"
               disabled={loading || !name.trim()}
             >
               {loading ? 'Creating...' : 'Create chat'}
             </button>
           </form>
+
           {error && (
-            <p className="mt-4 text-sm text-rose-300" role="alert">
+            <p className="mt-3 text-xs text-rose-300 sm:text-sm">
               {error}
             </p>
           )}
@@ -187,15 +184,17 @@ export default function ChatPanel({
 
       {/* Chat page */}
       {isChatPage && (
-        <div className="flex h-full flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-2 sm:space-y-3 sm:p-3">
 
             {loading ? (
               <PageLoader />
             ) : messages.length === 0 ? (
-              <p>No messages yet. Start a conversation!</p>
+              <p className="py-5 text-center text-xs text-white/40 sm:py-6 sm:text-sm">
+                No messages yet. Start a conversation!
+              </p>
             ) : (
               messages.map((message) => {
                 const isOwnMessage = message.senderId === userId
@@ -203,34 +202,48 @@ export default function ChatPanel({
                 return (
                   <div
                     key={message.id}
-                    className={`mb-3 flex ${
+                    className={`flex ${
                       isOwnMessage ? 'justify-end' : 'justify-start'
                     }`}
                   >
-                    <div className="max-w-[75%] rounded-lg border p-3">
-                      <p>{message.text}</p>
+                    <div
+                      className={`max-w-[90%] wrap-break-words rounded-xl px-3 py-2 sm:max-w-[75%] sm:rounded-2xl sm:px-4 sm:py-3 ${
+                        isOwnMessage
+                          ? 'rounded-br-sm bg-indigo-600 text-white'
+                          : 'rounded-bl-sm border border-white/10 bg-[#292929] text-white'
+                      }`}
+                    >
+                      <p className="whitespace-pre-wrap text-xs leading-5 sm:text-sm sm:leading-6">
+                        {message.text}
+                      </p>
 
-                      <small>
-                        {new Date(message.createdAt).toLocaleTimeString()}
+                      <small className="mt-1 block text-right text-[9px] text-white/50 sm:text-[10px]">
+                        {new Date(message.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
                       </small>
                     </div>
                   </div>
                 )
               })
             )}
-
           </div>
 
           {/* Error */}
-          {error && <p>{error}</p>}
+          {error && (
+            <p className="shrink-0 px-2 py-1.5 text-xs text-rose-300 sm:px-3 sm:py-2 sm:text-sm">
+              {error}
+            </p>
+          )}
 
           {/* Message input */}
           <form
             onSubmit={handleSendMessage}
-            className="flex gap-2"
+            className="flex shrink-0 items-center gap-1.5 border-t border-white/10 bg-[#171717] p-2 sm:gap-2 sm:p-3"
           >
             <input
-              className="flex-1 border p-2"
+              className="min-w-0 flex-1 rounded-lg border border-white/10 bg-[#252525] px-2.5 py-2.5 text-xs text-white outline-none placeholder:text-white/40 focus:border-indigo-400/50 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               onKeyDown={(e) => {
@@ -245,15 +258,15 @@ export default function ChatPanel({
 
             <button
               type="submit"
+              className="shrink-0 rounded-lg bg-indigo-500 px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-40 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               disabled={loading || sending || !messageText.trim()}
             >
-              {sending ? 'Sending...' : 'Send'}
+              {sending ? '...' : 'Send'}
             </button>
           </form>
-
         </div>
       )}
 
-    </main>
+    </div>
   )
 }
