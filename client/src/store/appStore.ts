@@ -6,11 +6,13 @@ interface AppState {
   isSidebarOpen: boolean
   isVoicePanelOpen: boolean
   isMemberListOpen: boolean
+  isShareModalOpen: boolean  // Add this
 
   toggleChatPanel: () => void
   toggleSidebar: () => void
   toggleVoicePanel: () => void
   toggleMemberList: () => void
+  toggleShareModal: () => void // Add this
 }
 
 export const useAppStore = create<AppState>((set) => ({
@@ -19,6 +21,9 @@ export const useAppStore = create<AppState>((set) => ({
   isSidebarOpen: false,
   isVoicePanelOpen: false,
   isMemberListOpen: false,
+  isShareModalOpen: false,
+
+ 
 
   // Actions
   toggleChatPanel: () =>
@@ -32,4 +37,6 @@ export const useAppStore = create<AppState>((set) => ({
 
   toggleMemberList: () =>
     set((state) => ({ isMemberListOpen: !state.isMemberListOpen })),
+  toggleShareModal: ()=>
+    set((state)=>({isShareModalOpen: !state.isShareModalOpen })),
 }))
