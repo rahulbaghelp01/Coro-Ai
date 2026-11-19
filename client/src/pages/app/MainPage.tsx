@@ -5,9 +5,11 @@ import TopNavigation from '../../components/TopNavigation'
 import { useChats } from '../../hooks/useChats'
 import BottomNavigation from '../../components/BottomNavigation'
 import { useParams } from 'react-router'
+import ShareModal from '../../components/ShareChat'
 
 export function Component() {
-  const { addChat } = useChats()
+  const { addChat,chats } = useChats()
+  
 
   const { chatId } = useParams()
 
@@ -30,6 +32,7 @@ export function Component() {
       </div>
 
       <BottomNavigation />
+      <ShareModal Chats={chats} />
     </div>
   )
 }

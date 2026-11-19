@@ -15,6 +15,7 @@ export default function BottomNavigation() {
 
   const isChatToggleDisabled = isHomePage || !isVoicePanelOpen
   const isVideoToggleDisabled = isHomePage || !isChatPanelOpen
+  const toggleSharedModal = useAppStore((state)=>state.toggleShareModal)
 
   const buttonStyle =
     "group relative flex size-11 items-center justify-center rounded-2xl border transition-all duration-200 active:scale-90 disabled:cursor-not-allowed disabled:opacity-25"
@@ -66,6 +67,8 @@ export default function BottomNavigation() {
 
         {/* Share */}
         <button
+          disabled={isHomePage}
+          onClick={toggleSharedModal}
           className={`${buttonStyle} ${inactiveStyle}`}
           aria-label="Share"
           title="Share"

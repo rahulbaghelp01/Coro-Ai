@@ -3,21 +3,24 @@ import { useState } from "react"
 import { X, Copy, Check, Link2 } from "lucide-react"
 import { useParams } from "react-router"
 import type { Chat } from "../features/types/types"
+import { useAppStore } from "../store/appStore"
 
 type ShareModalProps = {
-  isOpen: boolean
-  onClose: () => void
+ 
   Chats: Chat[] 
 }
 
 export default function ShareModal({
-  isOpen,
-  onClose,
+ 
   Chats 
 }: ShareModalProps) {
-  const [copied, setCopied] = useState(false)
+  
+  const isSharedModalOpen = useAppStore((state)=> state.isShareModalOpen)  
+  
+  const toggleSharedModal = useAppStore((state)=>state.toggleShareModal)
 
   const {chatId} = useParams()
+  const [copied, setCopied] = useState(false)
   
   const chat = Chats.find((chat) => chat.id === chatId)
 
@@ -25,7 +28,7 @@ const inviteLink = chat
   ? `${window.location.origin}/join/${chat.inviteToken}`
   : ""
 
-  if (!isOpen) return null
+  if (!isSharedModalOpen) return null
 
   const handleCopy = async () => {
     try {
@@ -54,7 +57,7 @@ const inviteLink = chat
           </div>
 
           <button
-            onClick={onClose}
+            onClick={toggleSharedModal}
             className="rounded-lg p-2 text-gray-400 transition hover:bg-white/10 hover:text-white"
           >
             <X size={20} />
