@@ -7,5 +7,7 @@ export type Chat = {
 
 export interface ChatPanelProps {
   chatId: string
-  addChat?: (chat: Chat) => void
+  addChat: (chat: Chat) => void
 }
+
+ 

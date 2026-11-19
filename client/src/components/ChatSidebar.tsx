@@ -59,101 +59,101 @@ export default function ChatPanel() {
   )
 
   return (
-    <aside
-      className={`relative isolate flex h-screen shrink-0 flex-col
-      overflow-hidden border-r border-white/30 text-[#000000eb]
-      transition-all duration-300
-      ${isSidebarOpen ? 'w-72' : 'w-19'}`}
-    >
-      {/* Gradient background */}
-      <Background />
-
-      {/* Header */}
-      <div className="flex h-18 shrink-0 items-center justify-between px-4">
-
-        {isSidebarOpen && <Logo />}
-
-        <button
-          onClick={toggleSidebar}
-          className="flex h-10 w-10 shrink-0 items-center justify-center
-          rounded-xl transition hover:bg-white/30"
-          aria-label="Toggle sidebar"
+    <>
+      {isSidebarOpen && (
+        <aside
+          className="relative isolate flex h-screen w-72 shrink-0
+          flex-col overflow-hidden border-r border-white/30
+          text-[#000000eb]"
         >
-          <PanelRight size={20} />
-        </button>
-      </div>
+          {/* Gradient background */}
+          <Background variant="sidebar" isOpen={isSidebarOpen} />
 
-     
-      {isSidebarOpen && (
-        <div className="px-4 pb-4">
-          <div className="flex items-center gap-2 rounded-xl
-          border border-white/40 bg-white/30 px-3 py-2.5
-          backdrop-blur-md transition focus-within:bg-white/50">
+          {/* Header */}
+          <div className="flex h-18 shrink-0 items-center justify-between px-4">
 
-            <Search size={18} className="shrink-0 text-black/60" />
+            {isSidebarOpen && <Logo />}
 
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search chats..."
-              className="w-full bg-transparent text-sm font-medium
-              text-black outline-none placeholder:text-black/50"
-            />
+            <button
+              onClick={toggleSidebar}
+              className="flex h-10 w-10 shrink-0 items-center justify-center
+              rounded-xl transition hover:bg-white/30"
+              aria-label="Toggle sidebar"
+            >
+              <PanelRight size={20} />
+            </button>
           </div>
-        </div>
-      )}
 
-    
-      {isSidebarOpen && (
-        <div className="flex-1 overflow-y-auto px-3 pb-4">
+          {isSidebarOpen && (
+            <div className="px-4 pb-4">
+              <div className="flex items-center gap-2 rounded-xl
+              border border-white/40 bg-white/30 px-3 py-2.5
+              backdrop-blur-md transition focus-within:bg-white/50">
 
-          <p className="mb-3 px-2 text-xs font-bold uppercase
-          tracking-wider text-black/50">
-            Your chats
-          </p>
+                <Search size={18} className="shrink-0 text-black/60" />
 
-          <div className="flex flex-col gap-1">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search chats..."
+                  className="w-full bg-transparent text-sm font-medium
+                  text-black outline-none placeholder:text-black/50"
+                />
+              </div>
+            </div>
+          )}
 
-            {/* Loading */}
-            {loading && <ChatListSkeleton />}
+          {isSidebarOpen && (
+            <div className="flex-1 overflow-y-auto px-3 pb-4">
 
-            {/* Error */}
-            {!loading && error && (
-              <p className="px-3 py-6 text-center text-sm text-red-500">
-                {error}
+              <p className="mb-3 px-2 text-xs font-bold uppercase
+              tracking-wider text-black/50">
+                Your chats
               </p>
-            )}
 
-             
-            {!loading && !error && filteredChats.map((chat) => (
-              <Link
-                key={chat.id}
-                to={`/app/chat/${chat.id}`}
-                className="flex items-center gap-3 rounded-xl
-                px-3 py-3 text-sm font-semibold
-                transition hover:bg-white/40"
-              >
-                <span className="h-2 w-2 shrink-0 rounded-full
-                bg-[#2F3FC4]" />
+              <div className="flex flex-col gap-1">
 
-                <span className="truncate">
-                  {chat.name}
-                </span>
-              </Link>
-            ))}
+                {/* Loading */}
+                {loading && <ChatListSkeleton />}
 
-            {/* Empty state */}
-            {!loading && !error && filteredChats.length === 0 && (
-              <p className="px-3 py-6 text-center text-sm
-              font-medium text-black/50">
-                No chats found
-              </p>
-            )}
+                {/* Error */}
+                {!loading && error && (
+                  <p className="px-3 py-6 text-center text-sm text-red-500">
+                    {error}
+                  </p>
+                )}
 
-          </div>
-        </div>
+                {!loading && !error && filteredChats.map((chat) => (
+                  <Link
+                    key={chat.id}
+                    to={`/app/chat/${chat.id}`}
+                    className="flex items-center gap-3 rounded-xl
+                    px-3 py-3 text-sm font-semibold
+                    transition hover:bg-white/40"
+                  >
+                    <span className="h-2 w-2 shrink-0 rounded-full
+                    bg-[#2F3FC4]" />
+
+                    <span className="truncate">
+                      {chat.name}
+                    </span>
+                  </Link>
+                ))}
+
+                {/* Empty state */}
+                {!loading && !error && filteredChats.length === 0 && (
+                  <p className="px-3 py-6 text-center text-sm
+                  font-medium text-black/50">
+                    No chats found
+                  </p>
+                )}
+
+              </div>
+            </div>
+          )}
+        </aside>
       )}
-    </aside>
+    </>
   )
 }

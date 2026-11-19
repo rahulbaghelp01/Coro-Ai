@@ -1,9 +1,26 @@
- // this file is the backgorund for whole application 
-export default function Background() {
+
+interface BackgroundProps {
+  isOpen?: boolean
+  variant?: 'app' | 'sidebar'
+}
+
+export default function Background({
+  isOpen = true,
+  variant = 'app',
+}: BackgroundProps) {
+  const isSidebar = variant === 'sidebar'
+
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      className={`pointer-events-none fixed
+        ${isSidebar
+          ? `inset-y-0 left-0 transition-all duration-300 ${
+              isOpen ? 'w-72' : 'w-19'
+            }`
+          : 'inset-0'
+        }
+        -z-10 overflow-hidden`}
     >
       <svg
         className="h-full w-full"
@@ -36,11 +53,6 @@ export default function Background() {
             <stop offset="100%" stopColor="#8d83eb" stopOpacity="0" />
           </radialGradient>
 
-          <radialGradient id="shadow">
-            <stop offset="0%" stopColor="#66749b" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#18204c" stopOpacity="0" />
-          </radialGradient>
-
           <filter id="soften" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="55" />
           </filter>
@@ -63,21 +75,30 @@ export default function Background() {
 
         <g filter="url(#soften)">
           <ellipse
-            cx="720" cy="100" rx="570" ry="280"
+            cx="720"
+            cy="100"
+            rx="570"
+            ry="280"
             fill="url(#light)"
           />
+
           <ellipse
-            cx="120" cy="390" rx="400" ry="430"
+            cx="120"
+            cy="390"
+            rx="400"
+            ry="430"
             fill="url(#blue)"
           />
+
           <ellipse
-            cx="1200" cy="235" rx="350" ry="260"
+            cx="1200"
+            cy="235"
+            rx="350"
+            ry="260"
             fill="url(#violet)"
           />
-          
         </g>
- 
       </svg>
     </div>
-  );
+  )
 }

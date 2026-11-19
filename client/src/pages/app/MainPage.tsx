@@ -1,10 +1,11 @@
 import { useParams } from 'react-router'
-import ChatWorkspace from '../../components/ChatWorkplace'
+ 
+import { Sidebar } from 'lucide-react'
 
 export function Component() {
   const { chatId } = useParams<{ chatId: string }>()
 
   if (!chatId) return null
 
-  return <ChatWorkspace chatId={chatId} />
+  return <Sidebar/>
 }

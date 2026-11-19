@@ -142,25 +142,46 @@ export default function ChatPanel({
 
       {/* Home page */}
       {isHomePage && (
-        <div>
-          {error && <p>{error}</p>}
+        <div className="flex h-full flex-col items-center justify-center px-5 py-10 text-center">
+          <div className="mb-5 flex size-14 items-center justify-center rounded-2xl border border-indigo-300/20 bg-indigo-400/10 text-indigo-200">
+            <span className="text-2xl" aria-hidden="true">+</span>
+          </div>
+          <h2 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
+            Start a new chat
+          </h2>
+          <p className="mt-2 max-w-sm text-sm leading-6 text-white/50">
+            Give your conversation a name. You can invite people once it’s
+            created.
+          </p>
 
           <form
+            className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row"
             onSubmit={async (e) => {
               e.preventDefault()
               await createChat(name)
             }}
           >
             <input
+              className="min-w-0 flex-1 rounded-xl border border-white/10 bg-black/20 px-4 py-3 text-sm text-white outline-none transition placeholder:text-white/35 focus:border-indigo-300/50 focus:ring-2 focus:ring-indigo-400/15"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Chat name"
+              placeholder="e.g. Weekend plans"
+              aria-label="Chat name"
             />
 
-            <button type="submit" disabled={loading || !name.trim()}>
-              {loading ? 'Creating...' : 'Create Chat'}
+            <button
+              className="rounded-xl bg-indigo-500 px-5 py-3 text-sm font-semibold text-white transition hover:bg-indigo-400 disabled:cursor-not-allowed disabled:opacity-45"
+              type="submit"
+              disabled={loading || !name.trim()}
+            >
+              {loading ? 'Creating...' : 'Create chat'}
             </button>
           </form>
+          {error && (
+            <p className="mt-4 text-sm text-rose-300" role="alert">
+              {error}
+            </p>
+          )}
         </div>
       )}
 

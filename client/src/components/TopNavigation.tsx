@@ -3,7 +3,7 @@ import { Users, ToggleLeft } from "lucide-react"
 import { useAppStore } from "../store/appStore"
 
 export default function TopNavigation() {
-  const toggleChatPanel = useAppStore((state) => state.toggleChatPanel)
+  const toggleChatPanel = useAppStore((state) => state.toggleSidebar)
   const toggleMemberList = useAppStore((state) => state.toggleMemberList)
 
   const buttonStyle =

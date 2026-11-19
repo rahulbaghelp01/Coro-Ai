@@ -15,11 +15,7 @@ export default function BottomNavigation() {
       flex w-full flex-row items-center justify-around
       border-t border-gray-800 bg-black p-3
 
-      md:bottom-auto md:left-0 md:top-0
-      md:h-full md:w-16
-      md:flex-col md:justify-center
-      md:gap-5
-      md:border-r md:border-t-0
+      
     ">
       <button
         onClick={toggleVoicePanel}
