@@ -10,4 +10,11 @@ export interface ChatPanelProps {
   addChat: (chat: Chat) => void
 }
 
- 
+export type Message = {
+  id: string
+  chatId: string
+  senderId: string | null
+  senderType: 'user' | 'ai'
+  text: string
+  createdAt: string
+} 
