@@ -135,7 +135,7 @@ export default function ChatPanel({
   }
 
   return (
-    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden">
+    <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[#171923]">
 
       {/* Home page */}
       {isHomePage && (
@@ -145,7 +145,7 @@ export default function ChatPanel({
             Start a new chat
           </h2>
 
-          <p className="mt-2 max-w-sm text-xs leading-5 text-white/50 sm:text-sm sm:leading-6">
+          <p className="mt-2 max-w-sm text-xs leading-5 text-white/45 sm:text-sm sm:leading-6">
             Give your conversation a name. You can invite people once it’s
             created.
           </p>
@@ -158,7 +158,7 @@ export default function ChatPanel({
             }}
           >
             <input
-              className="min-w-0 flex-1 rounded-lg border border-white/10 bg-black/20 px-3 py-2.5 text-xs text-white outline-none placeholder:text-white/35 focus:border-indigo-300/50 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
+              className="min-w-0 flex-1 rounded-lg border border-white/8 bg-[#202330] px-3 py-2.5 text-xs text-white outline-none placeholder:text-white/35 transition focus:border-[#5554c9]/60 focus:ring-2 focus:ring-[#5554c9]/10 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Weekend plans"
@@ -166,7 +166,7 @@ export default function ChatPanel({
             />
 
             <button
-              className="shrink-0 rounded-lg bg-indigo-500 px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-45 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
+              className="shrink-0 rounded-lg bg-[#5554c9] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#6865e8] disabled:opacity-45 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
               type="submit"
               disabled={loading || !name.trim()}
             >
@@ -175,7 +175,7 @@ export default function ChatPanel({
           </form>
 
           {error && (
-            <p className="mt-3 text-xs text-rose-300 sm:text-sm">
+            <p className="mt-3 text-xs text-rose-400 sm:text-sm">
               {error}
             </p>
           )}
@@ -192,7 +192,7 @@ export default function ChatPanel({
             {loading ? (
               <PageLoader />
             ) : messages.length === 0 ? (
-              <p className="py-5 text-center text-xs text-white/40 sm:py-6 sm:text-sm">
+              <p className="py-5 text-center text-xs text-white/35 sm:py-6 sm:text-sm">
                 No messages yet. Start a conversation!
               </p>
             ) : (
@@ -209,15 +209,15 @@ export default function ChatPanel({
                     <div
                       className={`max-w-[90%] wrap-break-words rounded-xl px-3 py-2 sm:max-w-[75%] sm:rounded-2xl sm:px-4 sm:py-3 ${
                         isOwnMessage
-                          ? 'rounded-br-sm bg-indigo-600 text-white'
-                          : 'rounded-bl-sm border border-white/10 bg-[#292929] text-white'
+                          ? 'rounded-br-sm bg-[#5554c9] text-white'
+                          : 'rounded-bl-sm border border-white/[0.07] bg-[#252939] text-white'
                       }`}
                     >
                       <p className="whitespace-pre-wrap text-xs leading-5 sm:text-sm sm:leading-6">
                         {message.text}
                       </p>
 
-                      <small className="mt-1 block text-right text-[9px] text-white/50 sm:text-[10px]">
+                      <small className="mt-1 block text-right text-[9px] text-white/45 sm:text-[10px]">
                         {new Date(message.createdAt).toLocaleTimeString([], {
                           hour: '2-digit',
                           minute: '2-digit',
@@ -232,7 +232,7 @@ export default function ChatPanel({
 
           {/* Error */}
           {error && (
-            <p className="shrink-0 px-2 py-1.5 text-xs text-rose-300 sm:px-3 sm:py-2 sm:text-sm">
+            <p className="shrink-0 px-2 py-1.5 text-xs text-rose-400 sm:px-3 sm:py-2 sm:text-sm">
               {error}
             </p>
           )}
@@ -240,10 +240,10 @@ export default function ChatPanel({
           {/* Message input */}
           <form
             onSubmit={handleSendMessage}
-            className="flex shrink-0 items-center gap-1.5 border-t border-white/10 bg-[#171717] p-2 sm:gap-2 sm:p-3"
+            className="flex shrink-0 items-center gap-1.5 border-t border-white/[0.07] bg-[#171923] p-2 sm:gap-2 sm:p-3"
           >
             <input
-              className="min-w-0 flex-1 rounded-lg border border-white/10 bg-[#252525] px-2.5 py-2.5 text-xs text-white outline-none placeholder:text-white/40 focus:border-indigo-400/50 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
+              className="min-w-0 flex-1 rounded-lg border border-white/8 bg-[#202330] px-2.5 py-2.5 text-xs text-white outline-none placeholder:text-white/35 transition focus:border-[#5554c9]/60 focus:bg-[#252939] focus:ring-2 focus:ring-[#5554c9]/10 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
               onKeyDown={(e) => {
@@ -258,7 +258,7 @@ export default function ChatPanel({
 
             <button
               type="submit"
-              className="shrink-0 rounded-lg bg-indigo-500 px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-indigo-400 disabled:opacity-40 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
+              className="shrink-0 rounded-lg bg-[#5554c9] px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-[#6865e8] disabled:opacity-40 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               disabled={loading || sending || !messageText.trim()}
             >
               {sending ? '...' : 'Send'}

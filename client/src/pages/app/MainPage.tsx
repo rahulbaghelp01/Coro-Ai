@@ -6,12 +6,25 @@ import { useChats } from '../../hooks/useChats'
 import BottomNavigation from '../../components/BottomNavigation'
 import { useParams } from 'react-router'
 import ShareModal from '../../components/ShareChat'
+import { useAppStore } from '../../store/appStore'
+import { useEffect } from 'react'
+
 
 export function Component() {
   const { addChat,chats } = useChats()
   
+   const setSidebarOpen = useAppStore(
+    (state) => state.setSidebarOpen
+    )
+    const { chatId } = useParams()
+    
 
-  const { chatId } = useParams()
+    
+   useEffect(() => {
+    setSidebarOpen(!chatId)
+    }, [chatId, setSidebarOpen])
+
+  
 
   return (
     <div className="relative flex h-screen w-full flex-col overflow-hidden bg-[#090a10] text-white">

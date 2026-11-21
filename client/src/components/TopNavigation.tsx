@@ -7,10 +7,10 @@ export default function TopNavigation() {
   const toggleMemberList = useAppStore((state) => state.toggleMemberList)
 
   const buttonStyle =
-    "group flex size-11 items-center justify-center rounded-2xl border border-transparent bg-white/[0.04] text-gray-400 transition-all duration-200 hover:border-white/10 hover:bg-white/[0.09] hover:text-white active:scale-90"
+    "group flex size-11 items-center justify-center rounded-2xl border border-white/[0.06] bg-[#202330] text-white/45 transition-all duration-200 hover:border-white/10 hover:bg-[#292e40] hover:text-white active:scale-90"
 
   return (
-    <nav className="flex w-full shrink-0 items-center justify-between border-b border-white/8 bg-[#111111]/80 px-4 py-3 backdrop-blur-xl sm:px-6">
+    <nav className="flex w-full shrink-0 items-center justify-between border-b border-white/8 bg-[#171923]/95 px-4 py-3 backdrop-blur-xl sm:px-6">
 
       {/* Sidebar */}
       <button
