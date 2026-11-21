@@ -1,8 +1,8 @@
 
-import { useLocation } from "react-router"
+import { useLocation, useNavigate } from "react-router"
 import { Video, MessageCircle, Share, MessageSquarePlus } from "lucide-react"
 import { useAppStore } from "../store/appStore"
-import { Link } from "react-router"
+ 
 
 export default function BottomNavigation() {
   const toggleChatPanel = useAppStore((state) => state.toggleChatPanel)
@@ -17,6 +17,10 @@ export default function BottomNavigation() {
   const isChatToggleDisabled = isHomePage || !isVoicePanelOpen
   const isVideoToggleDisabled = isHomePage || !isChatPanelOpen
   const toggleSharedModal = useAppStore((state)=>state.toggleShareModal)
+
+  const navigate = useNavigate()
+
+  const createChat = () => navigate(`/app`)
 
   const buttonStyle =
     "group relative flex size-11 items-center justify-center rounded-2xl border transition-all duration-200 active:scale-90 disabled:cursor-not-allowed disabled:opacity-25"
@@ -81,8 +85,8 @@ export default function BottomNavigation() {
         </button>
 
         {/* Notifications */}
-        <Link
-          to={`/join/${inviteToken}`} 
+        <button
+          onClick={createChat}
           className={`${buttonStyle} ${inactiveStyle}`}
           aria-label="Notifications"
           title="Notifications"
@@ -91,7 +95,7 @@ export default function BottomNavigation() {
             size={19}
             className="transition-transform duration-200 group-hover:scale-110"
           />
-        </Link>
+        </button>
 
       </div>
     </nav>

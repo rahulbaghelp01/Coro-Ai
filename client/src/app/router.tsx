@@ -30,6 +30,7 @@ export const router = createBrowserRouter([
       children: [
         { index: true, lazy: () => import('../pages/app/HomePage') },
         { path: 'chat/:chatId', lazy: () => import('../pages/app/MainPage') },
+        { path: 'join/:token',lazy: ()=>import('../pages/app/JoinPage')}
       ],
     },
   ],

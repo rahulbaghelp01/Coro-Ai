@@ -25,7 +25,7 @@ export default function ShareModal({
   const chat = Chats.find((chat) => chat.id === chatId)
 
 const inviteLink = chat
-  ? `${window.location.origin}/join/${chat.inviteToken}`
+  ? `${window.location.origin}/app/join/${chat.inviteToken}`
   : ""
 
   if (!isSharedModalOpen) return null
