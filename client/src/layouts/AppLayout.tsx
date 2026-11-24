@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { Outlet } from 'react-router'
-import
+import { socket } from '../lib/socket'
 
-
-//this is the app layout and the children is outlet which will be passed inside the  router.tsx
+// AppLayout stays mounted while the user moves between /app and /app/chat/:chatId,
+// so the socket connects once here and every page and hook shares the same connection.
 export default function AppLayout() {
+  useEffect(() => {
+    socket.connect()
 
-  useEffect(()=>{
-
-  },[])
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col">

@@ -1,153 +1,125 @@
-
+import { useLayoutEffect, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { useEffect, useState } from 'react'
 import type { Chat, ChatPanelProps } from '../features/types/types'
 import { api } from '../lib/api'
-import PageLoader from './PageLoader'
 import { useUserId } from '../hooks/useUserId'
+import { useChatMessages } from '../hooks/useChatMessages'
 
-interface Message {
-  id: string
-  chatId: string
-  senderId: string | null
-  senderType: string
-  text: string
-  createdAt: string
-}
-
-export default function ChatPanel({
-  chatId,
-  addChat,
-}: ChatPanelProps) {
-  const [messages, setMessages] = useState<Message[]>([])
-  const [loading, setLoading] = useState(false)
-  const [sending, setSending] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  const [name, setName] = useState('')
-  const [messageText, setMessageText] = useState('')
-
+export default function ChatPanel({ chatId, addChat }: ChatPanelProps) {
   const location = useLocation()
   const navigate = useNavigate()
+  const userId = useUserId()
 
   const isHomePage = location.pathname === '/app'
   const isChatPage = location.pathname.startsWith('/app/chat/')
 
-  const userId = useUserId()
+  // Messages, live updates, joining the room and sending all live in the hook
+  const { messages, isLoading, isLoadingOlder, hasMore, error, loadOlder, sendMessage } =
+    useChatMessages(isChatPage ? chatId : undefined)
 
-  // Create chat
-  async function createChat(name: string) {
-    try {
-      setLoading(true)
-      setError(null)
+  // Create chat form (home page)
+  const [name, setName] = useState('')
+  const [creating, setCreating] = useState(false)
+  const [createError, setCreateError] = useState<string | null>(null)
 
-      const data = await api<{ chat: Chat }>('/chats', {
-        method: 'POST',
-        body: { name },
-      })
+  // Message form (chat page)
+  const [messageText, setMessageText] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState<string | null>(null)
 
-      addChat?.(data.chat)
-      setName('')
-      navigate(`/app/chat/${data.chat.id}`)
-    } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create chat'
-      )
-    } finally {
-      setLoading(false)
+  // Scroll handling
+  const listRef = useRef<HTMLDivElement>(null)
+  const stickToBottom = useRef(true)
+  const prevScrollHeight = useRef<number | null>(null)
+
+  // A different chat starts at the bottom again
+  useEffect(() => {
+    stickToBottom.current = true
+  }, [chatId])
+
+  // After the list changes: keep the user's place, or follow new messages
+  useLayoutEffect(() => {
+    const el = listRef.current
+    if (!el) return
+
+    if (prevScrollHeight.current !== null) {
+      // older messages were added at the top, so keep the same messages in view
+      el.scrollTop += el.scrollHeight - prevScrollHeight.current
+      prevScrollHeight.current = null
+    } else if (stickToBottom.current) {
+      el.scrollTop = el.scrollHeight
+    }
+  }, [messages])
+
+  // If loading older messages failed, forget the saved height
+  useEffect(() => {
+    if (!isLoadingOlder) prevScrollHeight.current = null
+  }, [isLoadingOlder])
+
+  function handleScroll() {
+    const el = listRef.current
+    if (!el) return
+
+    // Are we near the bottom? Then new messages should scroll into view.
+    stickToBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80
+
+    // Near the top? Ask for the 30 messages before the oldest one we have.
+    if (el.scrollTop < 80 && hasMore && !isLoadingOlder && !isLoading) {
+      prevScrollHeight.current = el.scrollHeight
+      loadOlder()
     }
   }
 
-  // Fetch messages
-  useEffect(() => {
-    if (!isChatPage) {
-      setMessages([])
-      return
+  async function createChat(chatName: string) {
+    try {
+      setCreating(true)
+      setCreateError(null)
+
+      const data = await api<{ chat: Chat }>('/chats', {
+        method: 'POST',
+        body: { name: chatName },
+      })
+
+      addChat?.({ ...data.chat, isHost: true })
+      setName('')
+      navigate(`/app/chat/${data.chat.id}`)
+    } catch (err) {
+      setCreateError(err instanceof Error ? err.message : 'Failed to create chat')
+    } finally {
+      setCreating(false)
     }
+  }
 
-    let ignore = false
-
-    async function fetchMessages() {
-      try {
-        setLoading(true)
-        setError(null)
-
-        const data = await api<{ messages: Message[] }>(
-          `/chats/${encodeURIComponent(chatId)}/messages`
-        )
-
-        if (!ignore) {
-          setMessages(data.messages)
-        }
-      } catch (err) {
-        if (!ignore) {
-          setError(
-            err instanceof Error
-              ? err.message
-              : 'Failed to load messages'
-          )
-        }
-      } finally {
-        if (!ignore) {
-          setLoading(false)
-        }
-      }
-    }
-
-    fetchMessages()
-
-    return () => {
-      ignore = true
-    }
-  }, [chatId, isChatPage])
-
-  // Send message
-  async function handleSendMessage(
-    e: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     const text = messageText.trim()
-
     if (!text || sending) return
 
     try {
       setSending(true)
-      setError(null)
-
-      const data = await api<{ message: Message }>(
-        `/chats/${encodeURIComponent(chatId)}/messages`,
-        {
-          method: 'POST',
-          body: { text },
-        }
-      )
-
-      setMessages((prev) => [...prev, data.message])
+      setSendError(null)
+      stickToBottom.current = true // always follow my own message
+      await sendMessage(text)
       setMessageText('')
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to send message'
-      )
+      setSendError(err instanceof Error ? err.message : 'Failed to send message')
     } finally {
       setSending(false)
     }
   }
 
+  const visibleError = error ?? sendError
+
   return (
     <div className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden bg-[#171923]">
-
       {/* Home page */}
       {isHomePage && (
         <div className="flex h-full flex-col items-center justify-center overflow-y-auto px-3 py-5 text-center sm:px-5 sm:py-8">
-
-          <h2 className="text-lg font-semibold text-white sm:text-xl">
-            Start a new chat
-          </h2>
+          <h2 className="text-lg font-semibold text-white sm:text-xl">Start a new chat</h2>
 
           <p className="mt-2 max-w-sm text-xs leading-5 text-white/45 sm:text-sm sm:leading-6">
-            Give your conversation a name. You can invite people once it’s
-            created.
+            Give your conversation a name. You can invite people once it’s created.
           </p>
 
           <form
@@ -168,29 +140,37 @@ export default function ChatPanel({
             <button
               className="shrink-0 rounded-lg bg-[#5554c9] px-4 py-2.5 text-xs font-semibold text-white transition hover:bg-[#6865e8] disabled:opacity-45 sm:rounded-xl sm:px-5 sm:py-3 sm:text-sm"
               type="submit"
-              disabled={loading || !name.trim()}
+              disabled={creating || !name.trim()}
             >
-              {loading ? 'Creating...' : 'Create chat'}
+              {creating ? 'Creating...' : 'Create chat'}
             </button>
           </form>
 
-          {error && (
-            <p className="mt-3 text-xs text-rose-400 sm:text-sm">
-              {error}
-            </p>
-          )}
+          {createError && <p className="mt-3 text-xs text-rose-400 sm:text-sm">{createError}</p>}
         </div>
       )}
 
       {/* Chat page */}
       {isChatPage && (
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-
           {/* Messages */}
-          <div className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-2 sm:space-y-3 sm:p-3">
+          <div
+            ref={listRef}
+            onScroll={handleScroll}
+            className="min-h-0 flex-1 space-y-2 overflow-y-auto overscroll-contain p-2 [overflow-anchor:none] sm:space-y-3 sm:p-3"
+          >
+            {isLoadingOlder && (
+              <p className="py-1 text-center text-[10px] text-white/35">Loading older messages...</p>
+            )}
 
-            {loading ? (
-              <PageLoader />
+            {isLoading ? (
+              <div className="flex justify-center py-8">
+                <div
+                  role="status"
+                  aria-label="Loading messages"
+                  className="size-6 animate-spin rounded-full border-2 border-white/20 border-t-[#5554c9]"
+                />
+              </div>
             ) : messages.length === 0 ? (
               <p className="py-5 text-center text-xs text-white/35 sm:py-6 sm:text-sm">
                 No messages yet. Start a conversation!
@@ -202,12 +182,10 @@ export default function ChatPanel({
                 return (
                   <div
                     key={message.id}
-                    className={`flex ${
-                      isOwnMessage ? 'justify-end' : 'justify-start'
-                    }`}
+                    className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
                   >
                     <div
-                      className={`max-w-[90%] wrap-break-words rounded-xl px-3 py-2 sm:max-w-[75%] sm:rounded-2xl sm:px-4 sm:py-3 ${
+                      className={`max-w-[90%] wrap-break-word rounded-xl px-3 py-2 sm:max-w-[75%] sm:rounded-2xl sm:px-4 sm:py-3 ${
                         isOwnMessage
                           ? 'rounded-br-sm bg-[#5554c9] text-white'
                           : 'rounded-bl-sm border border-white/[0.07] bg-[#252939] text-white'
@@ -231,9 +209,9 @@ export default function ChatPanel({
           </div>
 
           {/* Error */}
-          {error && (
-            <p className="shrink-0 px-2 py-1.5 text-xs text-rose-400 sm:px-3 sm:py-2 sm:text-sm">
-              {error}
+          {visibleError && (
+            <p role="alert" className="shrink-0 px-2 py-1.5 text-xs text-rose-400 sm:px-3 sm:py-2 sm:text-sm">
+              {visibleError}
             </p>
           )}
 
@@ -246,27 +224,20 @@ export default function ChatPanel({
               className="min-w-0 flex-1 rounded-lg border border-white/8 bg-[#202330] px-2.5 py-2.5 text-xs text-white outline-none placeholder:text-white/35 transition focus:border-[#5554c9]/60 focus:bg-[#252939] focus:ring-2 focus:ring-[#5554c9]/10 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
               value={messageText}
               onChange={(e) => setMessageText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault()
-                  e.currentTarget.form?.requestSubmit()
-                }
-              }}
               placeholder="Write a message..."
-              disabled={loading || sending}
+              disabled={isLoading}
             />
 
             <button
               type="submit"
               className="shrink-0 rounded-lg bg-[#5554c9] px-3 py-2.5 text-xs font-semibold text-white transition hover:bg-[#6865e8] disabled:opacity-40 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm"
-              disabled={loading || sending || !messageText.trim()}
+              disabled={isLoading || sending || !messageText.trim()}
             >
               {sending ? '...' : 'Send'}
             </button>
           </form>
         </div>
       )}
-
     </div>
   )
 }

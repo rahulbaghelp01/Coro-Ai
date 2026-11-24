@@ -8,7 +8,7 @@ import { useParams } from 'react-router'
 import ShareModal from '../../components/ShareChat'
 import { useAppStore } from '../../store/appStore'
 import { useEffect } from 'react'
-
+ 
 
 export function Component() {
   const { addChat,chats } = useChats()
@@ -19,7 +19,7 @@ export function Component() {
     const { chatId } = useParams()
     
 
-    
+ 
    useEffect(() => {
     setSidebarOpen(!chatId)
     }, [chatId, setSidebarOpen])
