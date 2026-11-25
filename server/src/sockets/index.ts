@@ -28,7 +28,7 @@ export function initSocket(httpServer: HttpServer) {
       next(new Error('Invalid session'))
     }
   })
-io.on('connection', (socket) => {
+  io.on('connection', (socket) => {
   console.log('socket connected:', socket.data.userId)
 
   socket.join(`user:${socket.data.userId}`)  

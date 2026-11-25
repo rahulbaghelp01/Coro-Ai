@@ -13,6 +13,7 @@ interface AppState {
   setSidebarOpen: (isOpen: boolean) => void
   toggleVoicePanel: () => void
   toggleMemberList: () => void
+  setMemberListOpen: (isOpen: boolean) => void
   toggleShareModal: () => void
 }
 
@@ -26,20 +27,33 @@ export const useAppStore = create<AppState>((set) => ({
 
   // Actions
   toggleChatPanel: () =>
-    set((state) => ({ isChatPanelOpen: !state.isChatPanelOpen })),
+    set((state) => ({
+      isChatPanelOpen: !state.isChatPanelOpen,
+    })),
 
   toggleSidebar: () =>
-    set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+    set((state) => ({
+      isSidebarOpen: !state.isSidebarOpen,
+    })),
 
   setSidebarOpen: (isOpen) =>
     set({ isSidebarOpen: isOpen }),
 
   toggleVoicePanel: () =>
-    set((state) => ({ isVoicePanelOpen: !state.isVoicePanelOpen })),
+    set((state) => ({
+      isVoicePanelOpen: !state.isVoicePanelOpen,
+    })),
 
   toggleMemberList: () =>
-    set((state) => ({ isMemberListOpen: !state.isMemberListOpen })),
+    set((state) => ({
+      isMemberListOpen: !state.isMemberListOpen,
+    })),
+
+  setMemberListOpen: (isOpen) =>
+    set({ isMemberListOpen: isOpen }),
 
   toggleShareModal: () =>
-    set((state) => ({ isShareModalOpen: !state.isShareModalOpen })),
+    set((state) => ({
+      isShareModalOpen: !state.isShareModalOpen,
+    })),
 }))

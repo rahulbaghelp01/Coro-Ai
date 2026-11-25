@@ -15,6 +15,7 @@ function toErrorMessage(err: unknown) {
 }
 
 export function registerChatHandlers(io: Server, socket: Socket) {
+  
   socket.on('chat:join', async (chatId: string, ack?: Ack) => {
     try {
       await assertMember(String(chatId), socket.data.userId)
@@ -36,4 +37,5 @@ export function registerChatHandlers(io: Server, socket: Socket) {
       ack?.({ ok: false, error: toErrorMessage(err) })
     }
   })
+
 }
