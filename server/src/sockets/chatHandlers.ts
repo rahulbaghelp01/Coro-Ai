@@ -38,4 +38,9 @@ export function registerChatHandlers(io: Server, socket: Socket) {
     }
   })
 
+  socket.on('chat:leave', (chatId: string) => {
+   
+    socket.leave(String(chatId))
+  })
+
 }
