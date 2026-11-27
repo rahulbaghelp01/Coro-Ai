@@ -6,6 +6,7 @@ import { env } from '../config/env' // env for secret key
 import { AUTH_COOKIE } from '../utils/authCookie' // the auth cookie variable which holds the name of the cookie  
 import { registerChatHandlers } from './chatHandlers' // registered caht handler function 
 import { setIo } from './io'
+import { registerCallHandlers } from './callHandlers'
 
 export function initSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
@@ -31,8 +32,10 @@ export function initSocket(httpServer: HttpServer) {
   io.on('connection', (socket) => {
   console.log('socket connected:', socket.data.userId)
 
+
   socket.join(`user:${socket.data.userId}`)  
   registerChatHandlers(io, socket)
+  registerCallHandlers(io, socket)
 })
 
   return io

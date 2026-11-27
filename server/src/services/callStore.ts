@@ -25,6 +25,8 @@ export function joinCall(
   userId: string,
   socketId: string,
   name: string,
+  micOn: boolean,
+  cameraOn: boolean,
 ): JoinCallResult {
   let call = calls.get(chatId)
 
@@ -57,8 +59,8 @@ export function joinCall(
     userId,
     socketId,
     name,
-    micOn: true,
-    cameraOn: true,
+    micOn,
+    cameraOn,
   })
 
   return {
@@ -86,7 +88,7 @@ export function leaveCall(
   return removed
 }
 
-// Leave every call associated with a socket
+// Find every call associated with a socket
 export function leaveAllBySocket(
   socketId: string,
 ): { chatId: string; userId: string }[] {
@@ -103,7 +105,7 @@ export function leaveAllBySocket(
   return memberships
 }
 
-// Get participants without exposing their socket IDs
+// Get participants without exposing socket IDs
 export function getParticipants(
   chatId: string,
 ): PublicParticipant[] {
