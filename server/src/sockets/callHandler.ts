@@ -4,6 +4,7 @@ import type { Server, Socket } from 'socket.io'
 import {User} from '../models/user'
 import { assertMember } from '../services/chatService'
 
+
 import {
   getParticipants,
   getSocketId,
@@ -250,6 +251,7 @@ export function registerCallHandlers(
         await assertMember(chatId, userId)
 
         leaveCallAndNotify(io, chatId, userId)
+        
 
         await socket.leave(`call:${chatId}`)
       } catch {

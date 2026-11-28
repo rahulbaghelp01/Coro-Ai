@@ -2,6 +2,7 @@ import type { Request, Response } from 'express'
 import { createChatSchema } from '../validators/chatShema'
 import * as chatService from '../services/chatService'
 import { getIo } from '../sockets/io'
+import { leaveCallAndNotify } from '../sockets/callActions'
 
 export async function createChat(req: Request, res: Response) {
   const { name } = createChatSchema.parse(req.body)
@@ -25,20 +26,40 @@ export async function listMembers(req: Request, res: Response) {
 }
 
 
+
 export async function removeMember(req: Request, res: Response) {
   const chatId = String(req.params.chatId)
   const targetId = String(req.params.userId)
 
-  const { chatName } = await chatService.removeMember(chatId, req.userId!, targetId)
+  const { chatName } = await chatService.removeMember(
+    chatId,
+    req.userId!,
+    targetId,
+  )
 
   const io = getIo()
+
+  // Remove the member from the active call, if they are in one
+  leaveCallAndNotify(io, chatId, targetId)
+
+  // Remove their sockets from the call room
+  io.in(`user:${targetId}`).socketsLeave(`call:${chatId}`)
+
+  // Notify the removed member
   io.to(`user:${targetId}`).emit('chat:removed', {
     chatId,
     chatName,
     message: 'You were removed from this chat by the host',
   })
+
+  // Remove their sockets from the chat room
   io.in(`user:${targetId}`).socketsLeave(chatId)
-  io.to(chatId).emit('chat:member-removed', { chatId, userId: targetId })
+
+  // Notify remaining chat members
+  io.to(chatId).emit('chat:member-removed', {
+    chatId,
+    userId: targetId,
+  })
 
   res.json({ message: 'Member removed' })
 }

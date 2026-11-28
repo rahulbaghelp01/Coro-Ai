@@ -51,9 +51,6 @@ export function joinCall(
     }
   }
 
-  // Get people already in the call
-  const participants = getParticipants(chatId)
-
   // Add the new participant
   call.set(userId, {
     userId,
@@ -62,6 +59,9 @@ export function joinCall(
     micOn,
     cameraOn,
   })
+
+  // Get updated participants, including the new user
+  const participants = getParticipants(chatId)
 
   return {
     ok: true,

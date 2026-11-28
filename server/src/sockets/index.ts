@@ -6,7 +6,7 @@ import { env } from '../config/env' // env for secret key
 import { AUTH_COOKIE } from '../utils/authCookie' // the auth cookie variable which holds the name of the cookie  
 import { registerChatHandlers } from './chatHandlers' // registered caht handler function 
 import { setIo } from './io'
-import { registerCallHandlers } from './callHandlers'
+import { registerCallHandlers } from './callHandler'
 
 export function initSocket(httpServer: HttpServer) {
   const io = new Server(httpServer, {
